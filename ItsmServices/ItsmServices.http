@@ -1,0 +1,6 @@
+@ItsmServices_HostAddress = http://localhost:5101
+
+GET {{ItsmServices_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
