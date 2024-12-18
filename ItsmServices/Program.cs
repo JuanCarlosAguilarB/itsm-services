@@ -11,8 +11,15 @@ using ItsmServices.Src.Tickets.Infrastructure;
 using ItsmServices.Src.Tickets.Services.Create;
 using ItsmServices.Src.Tickets.Services.Find;
 using ItsmServices.Src.Tickets.Services.Update;
+using ItsmServices.Src.Users.Services.Create;
+using ItsmServices.Src.Users.Services.Find;
+using ItsmServices.Src.Users.Domain;
+using ItsmServices.Src.Users.Infrastructure.Persistence;
+using ItsmServices;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Configuration.AddEnvironmentVariables();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -31,11 +38,20 @@ builder.Services.AddScoped<ServicesPriority, HttpServicesPriority>();
 builder.Services.AddScoped<PriorityFinder>();
 builder.Services.AddScoped<ServicesStatus, HttpServicesStatus>();
 builder.Services.AddScoped<StatusFinder>();
-
+builder.Services.AddScoped<UserCreator>();
+builder.Services.AddScoped<UserRepository, RDUserRepository>();
+builder.Services.AddScoped<UserRightFinder>();
+builder.Services.AddScoped<UserRightRepository, RDUserRightRepository>();
 
 
 //-----------------------------------------------------------------------------------------------
 
+
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql(builder.Configuration["ConnectionString:PostgresDb"])
+    );
+
+//
 builder.Services.AddHttpClient(); // client to http
 var app = builder.Build();
 
